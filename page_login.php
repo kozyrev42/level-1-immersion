@@ -1,3 +1,4 @@
+<?php session_start(); ?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -33,9 +34,16 @@
             </a>
         </div>
         <div class="card p-4 border-top-left-radius-0 border-top-right-radius-0">
-            <div class="alert alert-success">
-                Регистрация успешна
-            </div>
+
+            <?php if (isset($_SESSION['success'])) : ?>
+                <div class="alert alert-success">
+                    <?php echo $_SESSION['success'] ?>
+                </div>
+
+            <!-- удаляем элемент массива -->
+            <?php unset($_SESSION['success']); ?>
+            <?php endif; ?>
+
             <form action="">
                 <div class="form-group">
                     <label class="form-label" for="username">Email</label>
@@ -55,7 +63,7 @@
             </form>
         </div>
         <div class="blankpage-footer text-center">
-            Нет аккаунта? <a href="page_register.html"><strong>Зарегистрироваться</strong>
+            Нет аккаунта? <a href="page_register.php"><strong>Зарегистрироваться</strong>
         </div>
     </div>
     <video poster="img/backgrounds/clouds.png" id="bgvid" playsinline autoplay muted loop>
