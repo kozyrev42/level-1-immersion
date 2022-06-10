@@ -65,3 +65,23 @@ function login($email, $password){
 
     return $status_login;
 }
+
+//проверка на авторизацию 
+function is_not_logged_in() {
+    // если не авторизован, возвращаем true
+    if (empty($_SESSION['user'])){
+        return true;
+    }
+    else {
+        return false;
+    }
+}
+
+// функция получения всех пользователей
+function get_all_users() {
+    $pdo = new PDO("mysql:host=127.0.0.1;dbname=my_php;charset=utf8", "root", "");
+    $query = 'SELECT * FROM `users-dive`';
+    $statement = $pdo->query($query);
+    $users = $statement->fetchAll(PDO::FETCH_ASSOC);
+    return $users;
+} 
