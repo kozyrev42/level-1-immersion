@@ -44,7 +44,7 @@ if ($status_login) {
     redirect_to ('users.php');
 } else {
     //  передаём ошибку
-    $_SESSION['error'] = true;
+    set_flash_massage("error", "не верный логин или пароль");
     // возращаемся к форме
     redirect_to ('page_login.php');
 }

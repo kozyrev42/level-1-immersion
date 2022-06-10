@@ -39,10 +39,16 @@
                 <div class="alert alert-success">
                     <?php echo $_SESSION['success'] ?>
                 </div>
-
-            <!-- удаляем элемент массива -->
             <?php unset($_SESSION['success']); ?>
             <?php endif; ?>
+
+            <?php if (isset($_SESSION['error'])) : ?>
+                <div class="alert alert-danger">
+                    <?php echo $_SESSION['error'] ?>
+                </div>
+            <?php unset($_SESSION['error']); ?>
+            <?php endif; ?>
+
 
             <form action="login.php" method="post">
                 <div class="form-group">
