@@ -41,7 +41,7 @@ session_start();
             </h1>
 
         </div>
-        <form action="">
+        <form action="status_handler.php" method="post">
             <div class="row">
                 <div class="col-xl-6">
                     <div id="panel-1" class="panel">
@@ -55,15 +55,15 @@ session_start();
                                         <!-- status -->
                                         <div class="form-group">
                                             <label class="form-label" for="example-select">Выберите статус</label>
-                                            <select class="form-control" id="example-select">
-                                                <option>Онлайн</option>
-                                                <option>Отошел</option>
-                                                <option>Не беспокоить</option>
+                                            <select name="status_select" class="form-control" id="example-select">
+                                                <option value="status-success">Онлайн</option>
+                                                <option value="status-warning">Отошел</option>
+                                                <option value="status-danger" selected="selected">Не беспокоить</option>
                                             </select>
                                         </div>
                                     </div>
                                     <div class="col-md-12 mt-3 d-flex flex-row-reverse">
-                                        <button class="btn btn-warning">Set Status</button>
+                                        <button type="submit" class="btn btn-warning">Изменить статус</button>
                                     </div>
                                 </div>
                             </div>
