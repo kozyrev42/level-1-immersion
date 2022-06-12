@@ -107,11 +107,13 @@ if (is_not_logged_in()) {
                                     <span class="rounded-circle profile-image d-block " style="background-image:url(img/demo/avatars/<?php echo $user['avatar'];?>); background-size: cover;"></span>
                                 </span>
                                 <div class="info-card-text flex-1">
-
+                                    
+                                    <a href="page_profile.php?id=<?php echo $user['id'] ?>" class="fs-xl text-truncate text-truncate-lg text-info" >
+                                        <?php echo $user['name']; ?>
+                                    </a> 
                                     <!-- админ весь доступ -->
                                     <?php if ($_SESSION['user']['role'] == "admin") : ?>
                                         <a href="javascript:void(0);" class="fs-xl text-truncate text-truncate-lg text-info" data-toggle="dropdown" aria-expanded="false">
-                                            <?php echo $user['name']; ?>
                                             <i class="fal fas fa-cog fa-fw d-inline-block ml-1 fs-md"></i>
                                             <i class="fal fa-angle-down d-inline-block ml-1 fs-md"></i>
                                         </a>
@@ -120,16 +122,8 @@ if (is_not_logged_in()) {
                                     <!-- доступ только к себе + не админ -->
                                     <?php if ($_SESSION['user']['id'] == $user['id'] && ($_SESSION['user']['role'] !== "admin")) : ?>
                                         <a href="javascript:void(0);" class="fs-xl text-truncate text-truncate-lg text-info" data-toggle="dropdown" aria-expanded="false">
-                                            <?php echo $user['name']; ?>
                                             <i class="fal fas fa-cog fa-fw d-inline-block ml-1 fs-md"></i>
                                             <i class="fal fa-angle-down d-inline-block ml-1 fs-md"></i>
-                                        </a>
-                                    <?php endif; ?>
-
-                                    <!-- другие пользователи для юзера + не админ -->
-                                    <?php if (($_SESSION['user']['id'] !== $user['id']) && ($_SESSION['user']['role'] !== "admin")) : ?>
-                                        <a class="fs-xl text-truncate text-truncate-lg text-info" aria-expanded="false">
-                                            <?php echo $user['name']; ?>
                                         </a>
                                     <?php endif; ?>
 
