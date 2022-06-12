@@ -50,16 +50,21 @@ if (is_not_logged_in()) {
     </nav>
 
     <main id="js-page-content" role="main" class="page-content mt-3">
-        <!--  -->
-        <!-- <div class="alert alert-success">
-                Профиль успешно обновлен.
-            </div> -->
 
+        <!-- успешно -->
         <?php if (isset($_SESSION['success'])) : ?>
             <div class="alert alert-success">
                 <?php echo $_SESSION['success'] ?>
             </div>
             <?php unset($_SESSION['success']); ?>
+        <?php endif; ?>
+        
+        <!-- Редактировать только свой профиль! -->
+        <?php if (isset($_SESSION['danger'])) : ?>
+            <div class="alert alert-danger">
+                <?php echo $_SESSION['danger'] ?>
+            </div>
+            <?php unset($_SESSION['danger']); ?>
         <?php endif; ?>
 
         <div class="subheader">

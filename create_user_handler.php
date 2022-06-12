@@ -30,19 +30,19 @@ if (!empty($user)) {
 }
 
 // далее добавляем пользователя, так как введенного емэйла нет в бд
-$id_new_user = add_user($email, $password);
+$id_user = add_user($email, $password);
 
 // обновление общей информации 
-edit_general_info($username, $position, $tel, $address, $id_new_user);
+edit_general_info($username, $position, $tel, $address, $id_user);
 
 // загрузка аватар
-upload_avatar($image_name, $id_new_user);
+upload_avatar($image_name, $id_user);
 
 // установить статус
-set_status($status, $id_new_user);
+set_status($status, $id_user);
 
 // добавление социальных сетей
-edit_social_links($vk, $teleg, $insta, $id_new_user);
+edit_social_links($vk, $teleg, $insta, $id_user);
 
 // сообщение
 set_flash_massage("success", "Пользователь добавлен!");

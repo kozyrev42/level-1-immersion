@@ -38,11 +38,7 @@ function add_user($email, $password)
     // в запросе, на метки передаём переменные, и выполняем его
     $statement->execute(['email' => $email, 'password' => $hashed_password]);
     // возвращаем id пользователя
-    $query = "SELECT * FROM `users-dive` WHERE email=:email";
-    $statement = $pdo->prepare($query);
-    $statement->execute(['email' => $email]);
-    $user = $statement->fetch(PDO::FETCH_ASSOC);
-    $id_new_user = $user['id'];
+    $id_new_user = $pdo->lastInsertId();
     return $id_new_user;
 }
 
@@ -113,23 +109,23 @@ function get_all_users()
 }
 
 // обновление общей информации 
-function edit_general_info($username, $position, $tel, $address, $id_new_user)
+function edit_general_info($username, $position, $tel, $address, $id_user)
 {
     $pdo = new PDO("mysql:host=127.0.0.1;dbname=my_php;charset=utf8", "root", "");
     $query = "UPDATE `users-dive` SET name=:username, position=:position, tel=:tel, address=:address WHERE id=:id";
     $statement = $pdo->prepare($query);
-    $statement->execute(['username' => $username, 'position' => $position, 'tel' => $tel, 'address' => $address, 'id' => $id_new_user]);
+    $statement->execute(['username' => $username, 'position' => $position, 'tel' => $tel, 'address' => $address, 'id' => $id_user]);
 }
 
 // загрузка аватар
-function upload_avatar($image_name, $id_new_user)
+function upload_avatar($image_name, $id_user)
 {
     // если аватар не загружен, запись пути на дефолтный аватар
     if (empty($image_name)) {
         $pdo = new PDO("mysql:host=127.0.0.1;dbname=my_php;charset=utf8", "root", "");
         $query = "UPDATE `users-dive` SET avatar=:avatar WHERE id=:id";
         $statement = $pdo->prepare($query);
-        $statement->execute(['avatar' => "avatar.png", 'id' => $id_new_user]);
+        $statement->execute(['avatar' => "avatar.png", 'id' => $id_user]);
     }
 
     // если аватар загружен
@@ -151,24 +147,46 @@ function upload_avatar($image_name, $id_new_user)
         $pdo = new PDO("mysql:host=127.0.0.1;dbname=my_php;charset=utf8", "root", "");
         $query = "UPDATE `users-dive` SET avatar=:avatar WHERE id=:id";
         $statement = $pdo->prepare($query);
-        $statement->execute(['avatar' => $uniq_image_name, 'id' => $id_new_user]);
+        $statement->execute(['avatar' => $uniq_image_name, 'id' => $id_user]);
     }
 }
 
 // установить статус
-function set_status($status, $id_new_user)
+function set_status($status, $id_user)
 {
     $pdo = new PDO("mysql:host=127.0.0.1;dbname=my_php;charset=utf8", "root", "");
     $query = "UPDATE `users-dive` SET status=:status WHERE id=:id";
     $statement = $pdo->prepare($query);
-    $statement->execute(['status' => $status, 'id' => $id_new_user]);
+    $statement->execute(['status' => $status, 'id' => $id_user]);
 }
 
 // добавление социальных сетей
-function edit_social_links($vk, $teleg, $insta, $id_new_user)
+function edit_social_links($vk, $teleg, $insta, $id_user)
 {
     $pdo = new PDO("mysql:host=127.0.0.1;dbname=my_php;charset=utf8", "root", "");
     $query = "UPDATE `users-dive` SET vk=:vk, teleg=:teleg, insta=:insta WHERE id=:id";
     $statement = $pdo->prepare($query);
-    $statement->execute(['vk' => $vk, 'teleg' => $teleg, 'insta' => $insta, 'id' => $id_new_user]);
+    $statement->execute(['vk' => $vk, 'teleg' => $teleg, 'insta' => $insta, 'id' => $id_user]);
+}
+
+// поиск пользователя по id
+function get_user_by_id($id_user)
+{
+    $pdo = new PDO("mysql:host=127.0.0.1;dbname=my_php;charset=utf8", "root", "");
+    $query = "SELECT * FROM `users-dive` WHERE id=:id";
+    $statement = $pdo->prepare($query);
+    $statement->execute(['id' => $id_user]);
+    $user = $statement->fetch(PDO::FETCH_ASSOC);
+    return $user;
+}
+
+// проверка на автора
+function is_not_author($logged_id_user, $edit_id_user)
+{
+    // если НЕ автор возвращаем true
+    if ($logged_id_user !== $edit_id_user) {
+        return true;
+    } else {
+        return false;
+    }
 }
