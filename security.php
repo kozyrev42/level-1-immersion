@@ -1,5 +1,32 @@
 <?php
 session_start();
+require_once('functions.php');
+
+//проверка на авторизацию 
+if (is_not_logged_in()) {
+    // если не авторизован, то перенаправление на форму логирования
+    redirect_to('page_login.php');
+}
+
+// получаем данные редактируемого профиля
+$edit_id_user = $_GET['id'];
+$edit_user = get_user_by_id($edit_id_user);
+
+// действующий email, редактируемого юзера
+$current_email_edit_user = $edit_user['email'];
+
+// данные авторизованного
+$logged_id_user = $_SESSION['user']['id'];
+
+// если НЕ админ, проверить на автора, если не автор, перенаправляем
+if (is_not_admin()) {
+    if (is_not_author($logged_id_user, $edit_id_user)) {
+        set_flash_massage("danger", "Редактировать только свой профиль!");
+        redirect_to('users.php');
+    }
+}
+
+
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -17,19 +44,19 @@ session_start();
 </head>
 <body>
     <nav class="navbar navbar-expand-lg navbar-dark bg-primary bg-primary-gradient">
-        <a class="navbar-brand d-flex align-items-center fw-500" href="users.html"><img alt="logo" class="d-inline-block align-top mr-2" src="img/logo.png"> Учебный проект</a> <button aria-controls="navbarColor02" aria-expanded="false" aria-label="Toggle navigation" class="navbar-toggler" data-target="#navbarColor02" data-toggle="collapse" type="button"><span class="navbar-toggler-icon"></span></button>
+        <a class="navbar-brand d-flex align-items-center fw-500" href="users.php"><img alt="logo" class="d-inline-block align-top mr-2" src="img/logo.png"> Учебный проект</a> <button aria-controls="navbarColor02" aria-expanded="false" aria-label="Toggle navigation" class="navbar-toggler" data-target="#navbarColor02" data-toggle="collapse" type="button"><span class="navbar-toggler-icon"></span></button>
         <div class="collapse navbar-collapse" id="navbarColor02">
             <ul class="navbar-nav mr-auto">
                 <li class="nav-item">
-                    <a class="nav-link" href="#">Главная <span class="sr-only">(current)</span></a>
+                    <a class="nav-link" href="users.php">Главная <span class="sr-only">(current)</span></a>
                 </li>
             </ul>
             <ul class="navbar-nav ml-auto">
-                <li class="nav-item">
+                <!-- <li class="nav-item">
                     <a class="nav-link" href="page_login.html">Войти</a>
-                </li>
+                </li> -->
                 <li class="nav-item">
-                    <a class="nav-link" href="#">Выйти</a>
+                    <a class="nav-link" href="logout.php">Выйти</a>
                 </li>
             </ul>
         </div>
@@ -41,7 +68,7 @@ session_start();
             </h1>
 
         </div>
-        <form action="">
+        <form action="security_handler.php" method="post">
             <div class="row">
                 <div class="col-xl-6">
                     <div id="panel-1" class="panel">
@@ -50,27 +77,33 @@ session_start();
                                 <h2>Обновление эл. адреса и пароля</h2>
                             </div>
                             <div class="panel-content">
+
+                                <!-- передаём действующий email -->
+                                <input type="hidden" name="current_email" type="text" id="simpleinput" class="form-control" value="<?php echo $current_email_edit_user; ?>">
+
+                                <!-- скрытый input с id -->
+                                <input type="hidden" name="id" id="simpleinput" class="form-control" value="<?php echo $edit_user['id']; ?>">
+                                
                                 <!-- email -->
                                 <div class="form-group">
                                     <label class="form-label" for="simpleinput">Email</label>
-                                    <input type="text" id="simpleinput" class="form-control" value="john@example.com">
+                                    <input name="new_email" type="text" id="simpleinput" class="form-control" value="<?php echo $current_email_edit_user ?>">
                                 </div>
 
                                 <!-- password -->
                                 <div class="form-group">
                                     <label class="form-label" for="simpleinput">Пароль</label>
-                                    <input type="password" id="simpleinput" class="form-control">
+                                    <input name="password" type="password" id="simpleinput" class="form-control">
                                 </div>
 
                                 <!-- password confirmation-->
-                                <div class="form-group">
+                                <!-- <div class="form-group">
                                     <label class="form-label" for="simpleinput">Подтверждение пароля</label>
                                     <input type="password" id="simpleinput" class="form-control">
-                                </div>
-
+                                </div> -->
 
                                 <div class="col-md-12 mt-3 d-flex flex-row-reverse">
-                                    <button class="btn btn-warning">Изменить</button>
+                                    <button type="submit" class="btn btn-warning">Изменить</button>
                                 </div>
                             </div>
                         </div>
