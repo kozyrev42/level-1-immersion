@@ -36,6 +36,39 @@ $id_user = add_user($email, $password);
 edit_general_info($username, $position, $tel, $address, $id_user);
 
 // загрузка аватар
+// загрузка аватар
+function upload_avatar($image_name, $id_user)
+{
+    // если аватар не загружен, запись пути на дефолтный аватар
+    /* if (empty($image_name)) {
+        $pdo = new PDO("mysql:host=127.0.0.1;dbname=my_php;charset=utf8", "root", "");
+        $query = "UPDATE `users-dive` SET avatar=:avatar WHERE id=:id";
+        $statement = $pdo->prepare($query);
+        $statement->execute(['avatar' => "avatar_default.png", 'id' => $id_user]);
+    } */
+
+    // если аватар загружен
+    if (!empty($image_name)) {
+        // получим расширение файла
+        $extension = pathinfo($image_name)["extension"];
+        // формируем уникальное имя файла
+        $uniq_image_name = uniqid() . "." . $extension;
+
+        // сохранить картинку в постоянную папку
+        // формируем путь сохранения, откуда
+        $tmp_name = $_FILES['image']['tmp_name'];
+        //куда
+        $target = "img/demo/avatars/" . $uniq_image_name;
+        // перемещаем в постоянную папку
+        move_uploaded_file($tmp_name, $target);
+
+        // записать в базу имени загруженего файла
+        $pdo = new PDO("mysql:host=127.0.0.1;dbname=my_php;charset=utf8", "root", "");
+        $query = "UPDATE `users-dive` SET avatar=:avatar WHERE id=:id";
+        $statement = $pdo->prepare($query);
+        $statement->execute(['avatar' => $uniq_image_name, 'id' => $id_user]);
+    }
+}
 upload_avatar($image_name, $id_user);
 
 // установить статус

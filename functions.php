@@ -117,40 +117,6 @@ function edit_general_info($username, $position, $tel, $address, $id_user)
     $statement->execute(['username' => $username, 'position' => $position, 'tel' => $tel, 'address' => $address, 'id' => $id_user]);
 }
 
-// загрузка аватар
-function upload_avatar($image_name, $id_user)
-{
-    // если аватар не загружен, запись пути на дефолтный аватар
-    if (empty($image_name)) {
-        $pdo = new PDO("mysql:host=127.0.0.1;dbname=my_php;charset=utf8", "root", "");
-        $query = "UPDATE `users-dive` SET avatar=:avatar WHERE id=:id";
-        $statement = $pdo->prepare($query);
-        $statement->execute(['avatar' => "avatar.png", 'id' => $id_user]);
-    }
-
-    // если аватар загружен
-    if (!empty($image_name)) {
-        // получим расширение файла
-        $extension = pathinfo($image_name)["extension"];
-        // формируем уникальное имя файла
-        $uniq_image_name = uniqid() . "." . $extension;
-
-        // сохранить картинку в постоянную папку
-        // формируем путь сохранения, откуда
-        $tmp_name = $_FILES['image']['tmp_name'];
-        //куда
-        $target = "img/demo/avatars/" . $uniq_image_name;
-        // перемещаем в постоянную папку
-        move_uploaded_file($tmp_name, $target);
-
-        // записать в базу имени загруженего файла
-        $pdo = new PDO("mysql:host=127.0.0.1;dbname=my_php;charset=utf8", "root", "");
-        $query = "UPDATE `users-dive` SET avatar=:avatar WHERE id=:id";
-        $statement = $pdo->prepare($query);
-        $statement->execute(['avatar' => $uniq_image_name, 'id' => $id_user]);
-    }
-}
-
 // установить статус
 function set_status($status, $id_user)
 {
@@ -187,6 +153,21 @@ function is_not_author($logged_id_user, $edit_id_user)
     if ($logged_id_user !== $edit_id_user) {
         return true;
     } else {
+        return false;
+    }
+}
+
+// имеется ли аватар у пользователя
+function has_avatar($edit_id_user)
+{
+    // данные пользывателя
+    $edit_user = get_user_by_id($edit_id_user);
+    $name_image_user = $edit_user['avatar'];
+    // если данные есть возвращаем имя картинки из базы
+    if (!empty($name_image_user)) {
+        return $name_image_user;
+    } else {
+        // иначе false
         return false;
     }
 }
